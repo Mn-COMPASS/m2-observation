@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>See It as They Do: Observation Notes</title>
+<style>
+  * { box-sizing: border-box; }
+  body { margin: 0; font-family: 'Brandon Text', 'Brandon Grotesque', Calibri, 'Segoe UI', Lato, Helvetica, Arial, sans-serif; color: #53565A; background: #ffffff; font-size: 17px; line-height: 1.6; }
+  .wrap { max-width: 760px; margin: 0 auto; padding: 28px 24px 32px; }
+  .label { font-size: 13px; font-weight: bold; letter-spacing: 2px; text-transform: uppercase; color: #0D5257; margin: 0 0 10px; }
+  h1 { font-size: 22px; color: #003865; margin: 0 0 10px; line-height: 1.3; }
+  h2 { font-size: 18px; color: #003865; margin: 0 0 8px; line-height: 1.3; }
+  p { margin: 0 0 14px; }
+  .step { border: 1px solid #CCD7E0; border-left: 6px solid #0D5257; background: #F7F7F6; padding: 18px 22px; margin: 0 0 14px; }
+  .step .n { font-size: 13px; font-weight: bold; letter-spacing: 2px; text-transform: uppercase; color: #0D5257; margin: 0 0 6px; }
+  .step p { font-size: 16px; }
+  label, legend { display: block; font-weight: bold; color: #003865; font-size: 15px; margin: 0 0 4px; }
+  fieldset { border: 0; padding: 0; margin: 0 0 6px; }
+  textarea { width: 100%; font: inherit; font-size: 16px; color: #53565A; border: 1px solid #CCD7E0; border-radius: 4px; padding: 9px 12px; background: #ffffff; min-height: 84px; resize: vertical; margin: 0 0 12px; }
+  input:focus-visible, textarea:focus-visible, button:focus-visible { outline: 3px solid #78BE21; outline-offset: 2px; }
+  .opts { display: flex; flex-direction: column; gap: 8px; }
+  .opts label { display: flex; align-items: flex-start; gap: 10px; background: #ffffff; border: 1px solid #CCD7E0; border-radius: 4px; padding: 10px 14px; font-size: 15px; font-weight: normal; color: #53565A; cursor: pointer; margin: 0; }
+  .opts label:has(input:checked) { background: #E6EBF0; border-color: #003865; color: #003865; }
+  .opts label strong { color: #003865; }
+  .opts input { margin: 4px 0 0; flex: 0 0 auto; }
+  .lookfor { background: #E6EBF0; border-left: 6px solid #003865; padding: 14px 20px; margin: 12px 0 0; font-size: 16px; }
+  .lookfor strong { color: #003865; }
+  .lookfor ul { margin: 6px 0 0; padding-left: 20px; }
+  .lookfor li { margin: 0 0 4px; }
+  .timer { display: flex; flex-wrap: wrap; align-items: center; gap: 12px; margin: 4px 0 0; }
+  .clock { font-size: 22px; font-weight: bold; color: #003865; min-width: 70px; }
+  .summary { background: #F1F8E7; border-left: 6px solid #78BE21; padding: 20px 22px; margin: 22px 0 0; }
+  .summary .line { margin: 0 0 8px; font-size: 16px; }
+  .summary .line strong { color: #003865; }
+  .summary .empty { font-style: italic; }
+  .actions { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 22px; }
+  button { font: inherit; font-size: 15px; font-weight: bold; padding: 10px 22px; border-radius: 4px; cursor: pointer; }
+  .primary { background: #003865; color: #ffffff; border: 1px solid #003865; }
+  .secondary { background: #ffffff; color: #003865; border: 1px solid #003865; }
+  .status { font-size: 14px; margin-top: 10px; min-height: 1.4em; }
+  .note { font-size: 14px; margin-top: 18px; }
+  @media print { .actions, .timer, .status { display: none; } textarea { border: 1px solid #999; min-height: 120px; } .step { break-inside: avoid; } }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <p class="label">Watch · About 10 minutes</p>
+  <h1>See It as They Do: Observation Notes</h1>
+  <p>Choose a lens, watch one real moment for about seven minutes, and capture what you saw. Write facts before interpretations. Leave out names, and do not photograph or record students.</p>
+
+  <form id="form" onsubmit="return false;">
+    <div class="step">
+      <p class="n">Step 1: Pick your lens (1 minute)</p>
+      <fieldset>
+        <legend>Which behavior from the reading will you watch for?</legend>
+        <div class="opts" id="lenses"></div>
+      </fieldset>
+      <div class="lookfor" id="lookfor" aria-live="polite"></div>
+    </div>
+
+    <div class="step">
+      <p class="n">Step 2: Choose where to watch</p>
+      <fieldset>
+        <legend>Where will you watch?</legend>
+        <div class="opts" id="places"></div>
+      </fieldset>
+    </div>
+
+    <div class="step">
+      <p class="n">Step 3: Watch (7 minutes)</p>
+      <p>Stay quiet and curious. If you are in a colleague's space, you are there to learn, not to evaluate. Use the timer if it helps.</p>
+      <div class="timer">
+        <span class="clock" id="clock" aria-live="off">7:00</span>
+        <button type="button" class="secondary" id="startTimer">Start 7-minute timer</button>
+        <button type="button" class="secondary" id="resetTimer">Reset</button>
+      </div>
+      <p class="status" id="timerStatus" aria-live="polite"></p>
+      <label for="saw">I saw or heard (facts only)</label>
+      <textarea id="saw" placeholder="For example: Three adults greeted students at the door; two greeted students by name. The welcome sign is in English only."></textarea>
+      <label for="wonder">I wonder</label>
+      <textarea id="wonder" placeholder="For example: I wonder which students walk past without anyone saying their name."></textarea>
+    </div>
+
+    <div class="step">
+      <p class="n">Step 4: Reflect (2 minutes)</p>
+      <label for="q1">1. What did you see or hear that told you who belongs here?</label>
+      <textarea id="q1"></textarea>
+      <label for="q2">2. Which behavior from the reading did you see in action, and which was missing? Who in that moment might describe it differently than you would?</label>
+      <textarea id="q2"></textarea>
+      <label for="q3">3. What leadership move, yours or someone else's, made this moment what it was? What one move might change it?</label>
+      <textarea id="q3"></textarea>
+      <label for="q4">4. Carry it into Listen: what kind of everyday habit will you listen for in the podcast?</label>
+      <textarea id="q4"></textarea>
+    </div>
+  </form>
+
+  <div class="summary" aria-live="polite">
+    <h2>Your notes</h2>
+    <div id="sumbody"></div>
+  </div>
+
+  <div class="actions">
+    <button type="button" class="primary" id="download">Download my notes</button>
+    <button type="button" class="secondary" id="print">Print a blank or filled sheet</button>
+    <button type="button" class="secondary" id="erase">Erase everything</button>
+  </div>
+  <p class="status" id="status" aria-live="polite"></p>
+  <p class="note">This is private. Everything you enter stays in your own browser on this device. Nothing is submitted, collected, or visible to anyone else, not to your colleagues and not to the facilitator.</p>
+</div>
+
+<script>
+(function () {
+  var KEY = 'cril-m2-observation-v1';
+  var LENSES = [
+    { v: 'Critical self-reflection', look: ['Whose voices get airtime, and whose do not', 'What assumptions show in how students or adults are grouped, addressed, or corrected', 'What you notice yourself reacting to, and why'] },
+    { v: 'Developing culturally responsive teachers', look: ['Whether students’ lives, languages, and knowledge show up in the work', 'Who is doing the thinking and the talking', 'How adults respond when a student’s way of knowing differs from the expected one'] },
+    { v: 'Promoting inclusive school environments', look: ['Who is visible on the walls and in the materials', 'Whose names are said, and said correctly', 'Who gets redirected, sent out, or left out, and who is not in the room at all'] },
+    { v: 'Engaging students, families, and community', look: ['What languages appear in signs, messages, and conversation', 'Where families and community are visible, or not', 'Whether student voice is shaping anything, or only being asked for'] }
+  ];
+  var PLACES = [
+    { v: 'A shared space or routine', d: 'arrival, passing time, lunch, recess, the front office' },
+    { v: 'An adult meeting', d: 'a PLC, leadership team, or staff meeting' },
+    { v: 'A classroom, by invitation', d: 'only if a colleague invites you in, framed as your learning, not their evaluation' },
+    { v: 'Your website and social media', d: 'if you cannot get out right now: spend the seven minutes seeing your school or district as a family new to the community would' }
+  ];
+  var TEXT = ['saw', 'wonder', 'q1', 'q2', 'q3', 'q4'];
+  var status = document.getElementById('status');
+  var state = load();
+
+  function blank() { return { lens: '', place: '', saw: '', wonder: '', q1: '', q2: '', q3: '', q4: '' }; }
+  function load() { try { var s = JSON.parse(localStorage.getItem(KEY) || 'null'); if (s) return s; } catch (e) {} return blank(); }
+  function save() { try { localStorage.setItem(KEY, JSON.stringify(state)); } catch (e) {} }
+  function esc(s) { return String(s).replace(/[&<>"]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]; }); }
+
+  function buildRadios(hostId, name, items, render) {
+    var host = document.getElementById(hostId); host.innerHTML = '';
+    items.forEach(function (it, i) {
+      var id = name + i;
+      var lab = document.createElement('label'); lab.setAttribute('for', id);
+      lab.innerHTML = '<input type="radio" name="' + name + '" id="' + id + '" value="' + esc(it.v) + '"><span><strong>' + esc(it.v) + '</strong>' + (it.d ? ': ' + esc(it.d) : '') + '</span>';
+      var inp = lab.querySelector('input'); inp.checked = (state[name] === it.v);
+      inp.addEventListener('change', function () { state[name] = it.v; save(); render(); });
+      host.appendChild(lab);
+    });
+  }
+
+  function renderLook() {
+    var el = document.getElementById('lookfor');
+    var l = LENSES.filter(function (x) { return x.v === state.lens; })[0];
+    if (!l) { el.innerHTML = 'Choose a lens to see what to look for.'; return; }
+    el.innerHTML = '<strong>Look for:</strong><ul>' + l.look.map(function (x) { return '<li>' + esc(x) + '</li>'; }).join('') + '</ul>';
+  }
+
+  function renderSum() {
+    function line(label, v) { return '<p class="line"><strong>' + label + ':</strong> ' + (v && v.trim() ? esc(v.trim()) : '<span class="empty">not yet written</span>') + '</p>'; }
+    var h = line('Lens', state.lens) + line('Where', state.place) + line('I saw or heard', state.saw) + line('I wonder', state.wonder) +
+      line('Who belongs here', state.q1) + line('Seen and missing', state.q2) + line('The leadership move', state.q3) + line('Listening for', state.q4);
+    document.getElementById('sumbody').innerHTML = h;
+  }
+  function renderAll() { renderLook(); renderSum(); }
+
+  buildRadios('lenses', 'lens', LENSES, renderAll);
+  buildRadios('places', 'place', PLACES, renderAll);
+  TEXT.forEach(function (f) {
+    var el = document.getElementById(f); el.value = state[f] || '';
+    el.addEventListener('input', function () { state[f] = el.value; save(); renderSum(); });
+  });
+  renderAll();
+
+  var remaining = 420, timer = null;
+  var clock = document.getElementById('clock'), tStatus = document.getElementById('timerStatus');
+  function show() { clock.textContent = Math.floor(remaining / 60) + ':' + String(remaining % 60).padStart(2, '0'); }
+  document.getElementById('startTimer').addEventListener('click', function () {
+    if (timer) return;
+    tStatus.textContent = 'Timer running.';
+    timer = setInterval(function () { remaining--; show(); if (remaining <= 0) { clearInterval(timer); timer = null; tStatus.textContent = 'Seven minutes are up. Move to Step 4 when you are ready.'; } }, 1000);
+  });
+  document.getElementById('resetTimer').addEventListener('click', function () { clearInterval(timer); timer = null; remaining = 420; show(); tStatus.textContent = ''; });
+
+  document.getElementById('download').addEventListener('click', function () {
+    var lines = ['CRIL Foundations Course, Module 2, Watch', 'See It as They Do: Observation Notes', '',
+      'Lens: ' + (state.lens || '(not chosen)'), 'Where: ' + (state.place || '(not chosen)'), '',
+      'I saw or heard: ' + (state.saw || ''), '', 'I wonder: ' + (state.wonder || ''), '',
+      '1. Who belongs here: ' + (state.q1 || ''), '', '2. Seen and missing: ' + (state.q2 || ''), '',
+      '3. The leadership move: ' + (state.q3 || ''), '', '4. Listening for: ' + (state.q4 || '')];
+    var blob = new Blob([lines.join('\n')], { type: 'text/plain' });
+    var a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = 'my-observation-notes.txt';
+    document.body.appendChild(a); a.click(); document.body.removeChild(a);
+    status.textContent = 'Downloaded my-observation-notes.txt.';
+  });
+  document.getElementById('print').addEventListener('click', function () { window.print(); });
+  document.getElementById('erase').addEventListener('click', function () {
+    try { localStorage.removeItem(KEY); } catch (e) {}
+    state = blank();
+    buildRadios('lenses', 'lens', LENSES, renderAll);
+    buildRadios('places', 'place', PLACES, renderAll);
+    TEXT.forEach(function (f) { document.getElementById(f).value = ''; });
+    renderAll();
+    status.textContent = 'Erased. Nothing is stored on this device.';
+  });
+})();
+</script>
+</body>
+</html>
